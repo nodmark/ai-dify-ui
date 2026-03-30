@@ -90,10 +90,38 @@ const useStyle = createStyles(({ token, css }) => {
       justify-content: space-between;
 
     `,
-    content: css`
-      width: calc(100% - 60%);
-      
-      overflow:auto;
+    /** 右侧 Markdown 预览外壳：与展开宽度联动 */
+    contentShell: css`
+      display: flex;
+      flex-direction: row;
+      flex-shrink: 0;
+      height: 100%;
+      border-left: 1px solid ${token.colorBorderSecondary};
+      overflow: hidden;
+      transition: width 0.28s ease;
+    `,
+    contentShellCollapsed: css`
+      width: 44px;
+    `,
+    contentShellExpanded: css`
+      width: min(440px, 42vw);
+      min-width: 280px;
+    `,
+    previewToggle: css`
+      width: 44px;
+      flex-shrink: 0;
+      display: flex;
+      justify-content: center;
+      padding-top: 12px;
+      border-right: 1px solid ${token.colorBorderSecondary};
+      background: ${token.colorBgLayout};
+    `,
+    previewPanel: css`
+      flex: 1;
+      min-width: 0;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
     `,
     placeholder: css`
       padding-top: 32px;

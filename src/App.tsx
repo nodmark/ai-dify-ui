@@ -1,4 +1,4 @@
-import { OpenAIOutlined } from '@ant-design/icons';
+import { MenuFoldOutlined, MenuUnfoldOutlined, OpenAIOutlined } from '@ant-design/icons';
 import {
   Bubble,
   Sender,
@@ -24,7 +24,7 @@ import {
   listDifyConversationMessages,
   mapDifyHistoryRowsToDefaultMessages,
 } from './services/dify';
-import { Flex, Spin, type GetRef } from 'antd';
+import { Button, Flex, Spin, Tooltip, type GetRef } from 'antd';
 import { clsx } from 'clsx';
 import React, { useEffect, useRef, useState } from 'react';
 import '@ant-design/x-markdown/themes/light.css';
@@ -225,6 +225,8 @@ const App = () => {
   });
 
   const { styles } = useStyle();
+  /** 右侧 Markdown 预览区，默认收缩 */
+  const [previewPanelOpen, setPreviewPanelOpen] = useState(false);
   const [deepThink, setDeepThink] = useState<boolean>(true);
 
   let lastAssistantPreview = { text: '', streaming: false };
@@ -347,12 +349,38 @@ const App = () => {
               </div>
             </div>
           </div>
-          <div className={styles.content}>
-            <BaseContent
-              markdown={lastAssistantPreview.text}
-              streaming={lastAssistantPreview.streaming}
-              markdownClassName={className}
-            />
+          <div
+            className={clsx(
+              styles.contentShell,
+              previewPanelOpen ? styles.contentShellExpanded : styles.contentShellCollapsed,
+            )}
+          >
+            <div className={styles.previewToggle}>
+              <Tooltip
+                title={
+                  previewPanelOpen ? locale.collapsePreviewPanel : locale.expandPreviewPanel
+                }
+              >
+                <Button
+                  type="text"
+                  size="large"
+                  icon={previewPanelOpen ? <MenuFoldOutlined /> : <MenuUnfoldOutlined />}
+                  onClick={() => setPreviewPanelOpen((v) => !v)}
+                  aria-label={
+                    previewPanelOpen ? locale.collapsePreviewPanel : locale.expandPreviewPanel
+                  }
+                />
+              </Tooltip>
+            </div>
+            {previewPanelOpen && (
+              <div className={styles.previewPanel}>
+                <BaseContent
+                  markdown={lastAssistantPreview.text}
+                  streaming={lastAssistantPreview.streaming}
+                  markdownClassName={className}
+                />
+              </div>
+            )}
           </div>
         </div>
       </ChatContext.Provider>
